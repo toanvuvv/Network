@@ -1,0 +1,2 @@
+GR01 Nhom2 1 MEM02
+GR02 Nhom3 1 MEM02

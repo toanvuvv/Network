@@ -1,0 +1,3 @@
+MEM02 toan1 toan 1
+MEM03 toan2 toan 1
+MEM03 toan3 toan 1
