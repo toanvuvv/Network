@@ -192,7 +192,14 @@ unsigned __stdcall serverWorkerThread(LPVOID completionPortID)
 					break;
 				}
 			}
-
+			for (auto &acc : listAccount)
+			{
+				if (acc.sock == pHD->socket)
+				{
+					acc.sock = 0; // Đặt sock về 0
+					break;
+				}
+			}
 			if (closesocket(pHD->socket) == SOCKET_ERROR)
 			{
 				cout << "closesocket() failed with error " << WSAGetLastError() << endl;
