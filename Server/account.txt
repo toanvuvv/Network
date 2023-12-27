@@ -1,10 +1,3 @@
-MEM01 admin admin 1
-MEM02 bien bien 1
-MEM03 dang dang 1
-MEM04 lam lam 1
-MEM05 network netwol 1
-MEM06 toan toan 1
-MEM07 toan0202 toan 1
-MEM08 tiennguyen tien 1
-MEM09 toan1 toan 1
-MEM10 tien1 tien 1
+@ª½   -1112408064
+MEM02 toan1 toan 1
+MEM03 toan2 toan 1
