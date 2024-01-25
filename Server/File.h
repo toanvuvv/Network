@@ -431,18 +431,28 @@ void requestToString(vector<Group> list, char *payload)
 	file.close();
 }
 
+bool startsWithMEM(const char *str)
+{
+	return strncmp(str, "MEM", 3) == 0;
+}
+
 void updateRequest(Group gr)
 {
 	int i = 0;
 	char *path = (char *)malloc(sizeof(char) * BUFF_SIZE);
 	sprintf(path, "%s/%s/Temp/Request.txt", SERVER_FOLDER, gr.nameGroup);
 
-	ofstream file(path);
+	std::ofstream file(path);
 	if (!file.fail())
 	{
 		while (strcmp(gr.request[i], "") != 0)
 		{
-			file << gr.request[i++] << " ";
+			if (startsWithMEM(gr.request[i]))
+			{
+				file << gr.request[i] << " ";
+				break; // Break after writing the first valid string
+			}
+			i++;
 		}
 	}
 	file.close();

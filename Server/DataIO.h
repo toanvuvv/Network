@@ -30,7 +30,7 @@ void loadAccountTxt(vector<Account> &list)
 	{
 		while (!file_.eof())
 		{
-			Account acc = {NULL};
+			Account acc = {};
 			file_ >> acc.id >> acc.user >> acc.pass >> acc.status;
 			list.push_back(acc);
 			count++;
@@ -52,7 +52,7 @@ void loadGroupTxt(vector<Group> &list)
 	{
 		while (!file_.eof())
 		{
-			Group gr = {NULL};
+			Group gr = {};
 			file_ >> gr.idGroup >> gr.nameGroup >> gr.nMember;
 			for (int i = 0; i < gr.nMember; i++)
 			{

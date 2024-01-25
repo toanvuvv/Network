@@ -10,6 +10,13 @@ void addToRequest(Group &gr, char *idMember)
 	// Giả sử MAX_REQUEST là kích thước tối đa của mảng request
 	const int MAX_REQUEST = 100; // Thay đổi giá trị này tùy theo định nghĩa của bạn
 
+	// Kiểm tra idMember có phải là chuỗi hợp lệ không
+	if (idMember == nullptr || idMember[0] == '\0')
+	{
+		cout << "ID thành viên không hợp lệ." << endl;
+		return;
+	}
+
 	int i = 0;
 	// Tìm vị trí trống đầu tiên trong mảng request
 	while (i < MAX_REQUEST && strcmp(gr.request[i], "") != 0)
