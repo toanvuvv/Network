@@ -1,22 +1,22 @@
 #pragma once
 #include "Resources.h"
 
-void printListAcc(const vector<Account> &list)
+void printListAcc(vector<Account> list)
 {
-	for (const auto &acc : list)
+	for (int i = 0; i < list.size(); i++)
 	{
-		cout << acc.id << " " << acc.user << " " << acc.pass << " " << acc.status << endl;
+		cout << list[i].id << " " << list[i].user << " " << list[i].pass << " " << list[i].status << endl;
 	}
 }
 
-void printListGr(const vector<Group> &list)
+void printListGr(vector<Group> list)
 {
-	for (const auto &gr : list)
+	for (int i = 0; i < list.size(); i++)
 	{
-		cout << gr.idGroup << " " << gr.nameGroup << " " << gr.nMember << " ";
-		for (int j = 0; j < gr.nMember; j++)
+		cout << list[i].idGroup << " " << list[i].nameGroup << " " << list[i].nMember << " ";
+		for (int j = 0; j < list[i].nMember; j++)
 		{
-			cout << gr.member[j] << " ";
+			cout << list[i].member[j] << " ";
 		}
 		cout << endl;
 	}
@@ -24,35 +24,35 @@ void printListGr(const vector<Group> &list)
 
 void loadAccountTxt(vector<Account> &list)
 {
-	ifstream file_(FILE_ACCOUNT);
+	std::ifstream file_(FILE_ACCOUNT);
 	int count = 0;
-	if (file_.is_open())
+	if (!file_.fail())
 	{
 		while (!file_.eof())
 		{
-			Account acc;
+			Account acc = {};
 			file_ >> acc.id >> acc.user >> acc.pass >> acc.status;
 			list.push_back(acc);
 			count++;
 		}
-		cout << " => LOADED " << count << " account(s)" << endl;
+		std::cout << " => LOADED " << count << " account(s)" << std::endl;
 	}
 	else
 	{
-		cout << " => ERROR : Cannot open file account.txt" << endl;
+		std::cout << " => ERROR : Cannot open file account.txt" << std::endl;
 	}
 	file_.close();
 }
 
 void loadGroupTxt(vector<Group> &list)
 {
-	ifstream file_(FILE_GROUP);
+	std::ifstream file_(FILE_GROUP);
 
-	if (file_.is_open())
+	if (!file_.fail())
 	{
 		while (!file_.eof())
 		{
-			Group gr;
+			Group gr = {};
 			file_ >> gr.idGroup >> gr.nameGroup >> gr.nMember;
 			for (int i = 0; i < gr.nMember; i++)
 			{
@@ -63,49 +63,69 @@ void loadGroupTxt(vector<Group> &list)
 	}
 	else
 	{
-		cout << " => ERROR : Cannot open file group.txt" << endl;
+		std::cout << " => ERROR : Cannot open file group.txt" << std::endl;
 	}
 	file_.close();
 }
 
-void updateGroupTxt(const vector<Group> &list)
+void updateGroupTxt(vector<Group> list)
 {
-	ofstream file_("group.txt");
+	std::ofstream file_("group.txt");
 
-	if (file_.is_open())
+	if (!file_.fail())
 	{
-		for (size_t i = 0; i < list.size(); i++)
+		for (int i = 0; i < list.size(); i++)
 		{
-			file_ << list[i].idGroup << " " << list[i].nameGroup << " " << list[i].nMember << " ";
-			for (int j = 0; j < list[i].nMember; j++)
+			if (i == list.size() - 1)
 			{
-				file_ << list[i].member[j];
-				if (j < list[i].nMember - 1)
+				file_ << list[i].idGroup << " " << list[i].nameGroup << " " << list[i].nMember << " ";
+				for (int j = 0; j < list[i].nMember; j++)
 				{
-					file_ << " ";
+					if (j == list[i].nMember - 1)
+					{
+						file_ << list[i].member[j];
+					}
+					else
+					{
+						file_ << list[i].member[j] << " ";
+					}
 				}
 			}
-			if (i < list.size() - 1)
+			else
 			{
+				file_ << list[i].idGroup << " " << list[i].nameGroup << " " << list[i].nMember << " ";
+				for (int j = 0; j < list[i].nMember; j++)
+				{
+					if (j == list[i].nMember - 1)
+					{
+						file_ << list[i].member[j];
+					}
+					else
+					{
+						file_ << list[i].member[j] << " ";
+					}
+				}
 				file_ << endl;
 			}
 		}
 	}
 	file_.close();
 }
-
-void updateAccountTxt(const vector<Account> &list)
+void updateAccountTxt(vector<Account> list)
 {
-	ofstream file_("account.txt");
+	std::ofstream file_("account.txt");
 
-	if (file_.is_open())
+	if (!file_.fail())
 	{
-		for (size_t i = 0; i < list.size(); i++)
+		for (int i = 0; i < list.size(); i++)
 		{
-			file_ << list[i].id << " " << list[i].user << " " << list[i].pass << " " << list[i].status;
-			if (i < list.size() - 1)
+			if (i == list.size() - 1)
 			{
-				file_ << endl;
+				file_ << list[i].id << " " << list[i].user << " " << list[i].pass << " " << list[i].status;
+			}
+			else
+			{
+				file_ << list[i].id << " " << list[i].user << " " << list[i].pass << " " << list[i].status << endl;
 			}
 		}
 	}

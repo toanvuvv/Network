@@ -8,8 +8,8 @@
         "args": [],
         "stopAtEntry": false,
         "externalConsole": true,
-        "cwd": "C:/Users/toanv/Downloads/N_work/LTM_FTP/Client",
-        "program": "C:/Users/toanv/Downloads/N_work/LTM_FTP/Client/build/Debug/outDebug",
+        "cwd": "D:/colinh/Network/Client",
+        "program": "D:/colinh/Network/Client/build/Debug/outDebug",
         "MIMode": "gdb",
         "miDebuggerPath": "gdb",
         "setupCommands": [

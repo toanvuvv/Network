@@ -1,3 +1,2 @@
-   -8912896
-MEM02 toan1 toan 1
-MEM03 toan2 toan 1
+MEM02 trung1 123456 1
+MEM03 trung2 123456 1

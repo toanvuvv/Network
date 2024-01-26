@@ -1,1 +1,2 @@
-28/12/23	00:52:50	./ServerData/Nhom1/haha.txt		toan1
+26/01/24	09:50:27	./ServerData/nhom1/haha.txt		trung1
+26/01/24	09:53:45	./ServerData/nhom1/hehe.txt		trung2
