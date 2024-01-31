@@ -32,6 +32,12 @@ void loadAccountTxt(vector<Account> &list)
 		{
 			Account acc = {};
 			file_ >> acc.id >> acc.user >> acc.pass >> acc.status;
+			if (file_.fail())
+			{
+				// Đã xảy ra lỗi khi đọc, không thêm vào danh sách
+				break;
+			}
+			// printf("%s %s %s %d\n", acc.id, acc.user, acc.pass, acc.status);
 			list.push_back(acc);
 			count++;
 		}
@@ -54,6 +60,11 @@ void loadGroupTxt(vector<Group> &list)
 		{
 			Group gr = {};
 			file_ >> gr.idGroup >> gr.nameGroup >> gr.nMember;
+			if (file_.fail())
+			{
+				// Đã xảy ra lỗi khi đọc, không thêm vào danh sách
+				break;
+			}
 			for (int i = 0; i < gr.nMember; i++)
 			{
 				file_ >> gr.member[i];
@@ -113,7 +124,7 @@ void updateGroupTxt(vector<Group> list)
 }
 void updateAccountTxt(vector<Account> list)
 {
-	std::ofstream file_("account.txt");
+	std::ofstream file_("account.txt", std::ios::trunc); // Mở file và xóa nội dung cũ (nếu có)
 
 	if (!file_.fail())
 	{

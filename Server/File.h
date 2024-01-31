@@ -396,39 +396,99 @@ void showLog(Message &msg)
 	free(buff);
 }
 
-void requestToString(vector<Group> list, char *payload)
+// void requestToString(vector<Group> list, char *payload)
+// {
+// 	char *path = (char *)malloc(sizeof(char) * BUFF_SIZE);
+// 	sprintf(path, "%s/%s/Temp/Request.txt", SERVER_FOLDER, payload);
+// 	int i, j = 0;
+// 	for (i = 0; i < 10; i++)
+// 	{
+// 		if (strcmp(payload, list[i].nameGroup) == 0)
+// 		{
+// 			break;
+// 		}
+// 	}
+// 	char *temp = (char *)malloc(sizeof(char) * 6);
+// 	ifstream file(path);
+// 	if (!file.fail())
+// 	{
+// 		while (!file.eof())
+// 		{
+// 			file >> temp;
+// 			if (strcmp(temp, "") == 0)
+// 			{
+// 				break;
+// 			}
+// 			sprintf(list[i].request[j], "%s", temp);
+// 		}
+// 	}
+// 	sprintf(payload, "");
+// 	j = 0;
+// 	while (strcmp(list[i].request[j], "") != 0)
+// 	{
+// 		strcat(payload, list[i].request[j++]);
+// 	}
+// 	file.close();
+// }
+void requestToString(vector<Group> &list, char *payload)
 {
-	char *path = (char *)malloc(sizeof(char) * BUFF_SIZE);
+	int MAX_REQUESTS = 100;
+	char path[BUFF_SIZE];
 	sprintf(path, "%s/%s/Temp/Request.txt", SERVER_FOLDER, payload);
-	int i, j = 0;
-	for (i = 0; i < 10; i++)
+	int i;
+	for (i = 0; i < list.size(); i++)
 	{
 		if (strcmp(payload, list[i].nameGroup) == 0)
 		{
 			break;
 		}
 	}
-	char *temp = (char *)malloc(sizeof(char) * 6);
-	ifstream file(path);
-	if (!file.fail())
+	if (i == list.size())
 	{
-		while (!file.eof())
+		// Nhóm không được tìm thấy
+		return;
+	}
+
+	std::ifstream file(path);
+	if (file.is_open())
+	{
+		int j = 0;
+		std::string temp;
+		while ((file >> temp) && j < MAX_REQUESTS) // Đọc từng yêu cầu, giả sử MAX_REQUESTS là số lượng tối đa
 		{
-			file >> temp;
-			if (strcmp(temp, "") == 0)
-			{
-				break;
-			}
-			sprintf(list[i].request[j], "%s", temp);
+			strncpy(list[i].request[j], temp.c_str(), sizeof(list[i].request[j]) - 1);
+			list[i].request[j][sizeof(list[i].request[j]) - 1] = '\0';
+			j++;
 		}
+		// Khởi tạo lại các yêu cầu còn lại trong mảng để tránh dữ liệu rác
+		for (int k = j; k < MAX_REQUESTS; k++)
+		{
+			list[i].request[k][0] = '\0';
+		}
+		file.close();
 	}
-	sprintf(payload, "");
-	j = 0;
-	while (strcmp(list[i].request[j], "") != 0)
+	else
 	{
-		strcat(payload, list[i].request[j++]);
+		// Xử lý không mở được file
 	}
-	file.close();
+
+	// Debug: In ra các yêu cầu
+	printf("Request from gr '%s':\n", list[i].nameGroup);
+	for (int k = 0; k < MAX_REQUESTS && list[i].request[k][0] != '\0'; k++)
+	{
+		printf("Request[%d]: %s\n", k, list[i].request[k]);
+	}
+
+	// Xây dựng payload
+	payload[0] = '\0'; // Đặt payload thành chuỗi rỗng
+	for (int j = 0; j < MAX_REQUESTS && list[i].request[j][0] != '\0'; j++)
+	{
+		if (j > 0)
+		{
+			strcat(payload, " "); // Thêm khoảng trắng giữa các yêu cầu
+		}
+		strcat(payload, list[i].request[j]);
+	}
 }
 
 bool startsWithMEM(const char *str)
@@ -436,25 +496,55 @@ bool startsWithMEM(const char *str)
 	return strncmp(str, "MEM", 3) == 0;
 }
 
+// void updateRequest(Group gr)
+// {
+// 	int i = 0;
+// 	char *path = (char *)malloc(sizeof(char) * BUFF_SIZE);
+// 	sprintf(path, "%s/%s/Temp/Request.txt", SERVER_FOLDER, gr.nameGroup);
+
+// 	std::ofstream file(path);
+// 	if (!file.fail())
+// 	{
+// 		while (strcmp(gr.request[i], "") != 0)
+// 		{
+// 			if (startsWithMEM(gr.request[i]))
+// 			{
+// 				file << gr.request[i] << " ";
+// 				break; // Break after writing the first valid string
+// 			}
+// 			i++;
+// 		}
+// 	}
+// 	file.close();
+// 	free(path);
+// }
+
 void updateRequest(Group gr)
 {
-	int i = 0;
 	char *path = (char *)malloc(sizeof(char) * BUFF_SIZE);
 	sprintf(path, "%s/%s/Temp/Request.txt", SERVER_FOLDER, gr.nameGroup);
-
+	int MAX_REQUEST = 100;
 	std::ofstream file(path);
 	if (!file.fail())
 	{
-		while (strcmp(gr.request[i], "") != 0)
+		for (int i = 0; i < MAX_REQUEST; i++)
 		{
+			if (strcmp(gr.request[i], "") == 0)
+			{
+				// Đã duyệt hết các yêu cầu hiện có, dừng vòng lặp
+				break;
+			}
 			if (startsWithMEM(gr.request[i]))
 			{
-				file << gr.request[i] << " ";
-				break; // Break after writing the first valid string
+				file << gr.request[i] << std::endl; // Ghi từng yêu cầu vào file, mỗi yêu cầu trên một dòng
 			}
-			i++;
 		}
 	}
+	else
+	{
+		std::cout << "Cannot open file " << path << std::endl;
+	}
+
 	file.close();
 	free(path);
 }

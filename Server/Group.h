@@ -168,7 +168,7 @@ void createGroup(Message &msg, vector<Group> &listGroup)
 		}
 	}
 	Group gr;
-	sprintf_s(gr.idGroup, "GR%02d", i + 1);
+	sprintf_s(gr.idGroup, "GR%02d", listGroup.size() + 1);
 	sprintf_s(gr.nameGroup, "%s", nameGroup);
 	gr.nMember = 1;
 	sprintf_s(gr.member[0], "%s", id);
@@ -227,10 +227,13 @@ void enterGroup(Message &msg, vector<Group> listGroup, int nClients, SOCKET pHDS
 void joinGroup(Message &msg, vector<Group> &listGroup)
 {
 
-	char *nameGroup = (char *)malloc(sizeof(char) * BUFF_SIZE);
-	char *id = strtok_s(msg.payload, DELIMETER, &nameGroup);
-	// print ra gia tri cua id
-	printf("%s\n", id);
+	char *context = NULL;
+	char *id = strtok_s(msg.payload, DELIMETER, &context); // Lấy ID từ msg.payload
+	char *nameGroup = strtok_s(NULL, DELIMETER, &context); // Lấy nameGroup từ phần còn lại của msg.payload
+
+	// Debug: In ra giá trị của id
+	printf("ID: %s\n", id);
+	printf("Group Name: %s\n", nameGroup);
 
 	int j;
 	for (j = 0; j < listGroup.size(); j++)
@@ -246,12 +249,21 @@ void joinGroup(Message &msg, vector<Group> &listGroup)
 		{
 			addToRequest(listGroup[j], id);
 			updateRequest(listGroup[j]);
-			// print ra listGroup[j] va listGroup[j].request
-			printf("%s\n", listGroup[j].nameGroup);
-			for (int i = 0; i < 100; i++)
-			{
-				printf("%s\n", listGroup[j].request[i]);
-			}
+			// // print ra listGroup[j] va listGroup[j].request để debug
+			// printf("Group Name: %s\n", listGroup[j].nameGroup);
+			// for (int i = 0; i < 100; i++)
+			// {
+			// 	// Kiểm tra xem request[i] có phải là chuỗi rỗng hoặc chỉ chứa ký tự null không
+			// 	if (listGroup[j].request[i][0] != '\0')
+			// 	{
+			// 		printf("Request[%d]: %s\n", i, listGroup[j].request[i]);
+			// 	}
+			// 	else
+			// 	{
+			// 		// Ngừng in nếu không có thêm yêu cầu
+			// 		break;
+			// 	}
+			// }
 			craftMessage(msg, REQUEST_SUCCESS, 0, 0, NULL);
 		}
 		else
